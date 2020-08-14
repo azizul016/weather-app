@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="app-warp">
+        <header>
+            <input type="text" placeholder="Search for a city..." class="search-box">         
+        </header>
+        <main>
+            <section class="location">
+                <div class="city">Northampton, GB</div>
+                <div class="date">Thrusday 10 January 2020</div>
+
+            </section>
+            <div class="current">
+                <div class="temp">15 <span>°c</span></div>
+            <div class="weather">Sunny</div>
+            <div class="hi-low">13°c / 16°c</div>
+            </div>
+        </main>
+    </div>
+
+
+<script>
+//     const api = {
+//         key: 'c4395597b8c43b3fa65220d2224ca6ce',
+//         base: 'https://api.openweathermap.org/data/2.5'
+//     }
+
+//     const searchBox = document.querySelector(".search-box");
+//     searchBox.addEventListener("keypress", setQuery);
+//     function setQuery(evt) {
+//         if (evt.keyCode == 13) {
+//             getResult(searchBox.value);
+//             // console.log(searchBox.value);
+//         }
+//     }
+
+// function getResult(query) {
+//     fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+//     .then(weather => {
+//       return weather.json();
+//     }).then(displayResults);
+// }
+
+// function displayResults(weather) {
+//     console.log(weather);
+// }
+
+const searchBox = document.querySelector(".search-box");
+const city = document.querySelector(".city") ;
+const temp = document.querySelector(".temp");
+const weather = document.querySelector(".weather") ;
+const hiLow = document.querySelector(".hi-low");
+// const date = document.querySelector(".data") ;
+
+searchBox.addEventListener("keypress", setQuery);
+function setQuery(evt) {
+    if (evt.keyCode == 13) {
+       getResult(searchBox.value)
+    }
+}
+
+function getResult(city) {
+    fetch('https://api.openweathermap.org/data/2.5/weather?q='+searchBox.value+'&units=metric&appid=c4395597b8c43b3fa65220d2224ca6ce')
+        .then(res => res.json())
+        .then(data => {
+            displayResult(data)
+            
+            // console.log(data);
+        })
+}
+
+function displayResult(data) {
+    // var cityValue = data['name'];
+    let cityValue = data.name + ' ' + data.sys.country;
+    city.innerHTML = cityValue;
+
+    // var tempValue = data['main']['temp'];
+    let tempValue = data.main.temp;
+    temp.innerHTML = tempValue;
+    // var weatherValue = data["weather"][0]["description"];
+    // var weatherValue = data.weather[0].description;
+    let weatherValue = data.weather[0].main;
+    weather.innerHTML = weatherValue;
+
+    // hiLow.innerText = `${Math.round(data.main.temp_min)}°c / ${Math.round(data.main.temp_max)}°c`;
+    let hiLowValue = `${Math.round(data.main.temp_min)}°c / ${Math.round(data.main.temp_max)}°c`;
+    hiLow.innerHTML = hiLowValue;
+
+
+
+    // var hiLowValue = data['main']["temp_min"]['main']["temp_max"];
+    // hiLow.innerHTML = hiLowValue;
+   
+
+    // let hilow = document.querySelector('.hi-low');
+   
+
+
+    let now = new Date();
+    let date = document.querySelector('.location .date');
+    date.innerText = dateBuilder(now);
+    // dateBuilder (d)
+    // let temp = document.querySelector('.current .temp');
+    // temp.innerHTML = `${Math.round(weather.main.temp)}<span>°c</span>`;
+    
+    
+}
+
+function dateBuilder (d) {
+  let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+  let day = days[d.getDay()];
+  let date = d.getDate();
+  let month = months[d.getMonth()];
+  let year = d.getFullYear();
+
+  return `${day} ${date} ${month} ${year}`;
+}
+
+
+</script>
+
+</body>
+</html>
